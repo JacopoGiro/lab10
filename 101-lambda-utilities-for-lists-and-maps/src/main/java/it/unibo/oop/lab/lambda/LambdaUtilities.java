@@ -2,6 +2,7 @@ package it.unibo.oop.lab.lambda;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,7 +24,6 @@ import static java.util.Collections.emptyMap;
  * This enables calling them by using the concise lambda syntax, as it's done in the main function.
  * <br>
  * Realize the three methods **WITHOUT** using the Stream library, but only leveraging the lambdas.
- *
  */
 public final class LambdaUtilities {
 
@@ -61,10 +61,11 @@ public final class LambdaUtilities {
      *         otherwise.
      */
     public static <T> List<Optional<T>> optFilter(final List<T> list, final Predicate<T> pre) {
-        /*
-         * Suggestion: consider Optional.filter
-         */
-        return emptyList();
+        List<Optional<T>> copyList = new ArrayList<Optional<T>>();
+        for (T elem : list) {
+            copyList.add(Optional.ofNullable(elem).filter(pre));
+        }
+        return copyList;
     }
 
     /**
@@ -80,10 +81,16 @@ public final class LambdaUtilities {
      *         based on the mapping done by the function
      */
     public static <R, T> Map<R, Set<T>> group(final List<T> list, final Function<T, R> op) {
-        /*
-         * Suggestion: consider Map.merge
-         */
-        return emptyMap();
+        Map<R, Set<T>> retMap = new HashMap<>();
+        list.forEach( t -> retMap.merge(
+            op.apply(t), 
+            Set.of(t), 
+            (Set<T> old, Set<T> nuovo) -> {
+                old.addAll(nuovo);
+                return old;
+            }
+        ));
+        return retMap;
     }
 
     /**

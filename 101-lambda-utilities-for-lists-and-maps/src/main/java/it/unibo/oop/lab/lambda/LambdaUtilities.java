@@ -62,9 +62,9 @@ public final class LambdaUtilities {
      */
     public static <T> List<Optional<T>> optFilter(final List<T> list, final Predicate<T> pre) {
         List<Optional<T>> copyList = new ArrayList<Optional<T>>();
-        for (T elem : list) {
-            copyList.add(Optional.ofNullable(elem).filter(pre));
-        }
+        list.forEach(t -> 
+            copyList.add(Optional.ofNullable(t).filter(pre))
+        );
         return copyList;
     }
 
@@ -108,11 +108,7 @@ public final class LambdaUtilities {
     public static <K, V> Map<K, V> fill(final Map<K, Optional<V>> map, final Supplier<V> def) {
         Map<K, V> copyMap = new HashMap<>();
         map.forEach((K key, Optional<V> elem) -> {
-            if(elem.isEmpty()){
-                copyMap.put(key , Optional.ofNullable(def.get()).get());
-            }else{
-                copyMap.put(key, elem.get());
-            }
+            copyMap.put(key, elem.orElseGet(def));
         });
         return copyMap;
     }

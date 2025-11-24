@@ -2,7 +2,6 @@ package it.unibo.mvc;
 
 /**
  * This class models a draw number game.
- *
  */
 public interface DrawNumber {
 

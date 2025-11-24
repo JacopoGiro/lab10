@@ -1,7 +1,7 @@
 package it.unibo.mvc;
 
 /**
- *
+ *  interfaccia view
  */
 public interface DrawNumberView {
 
@@ -24,4 +24,9 @@ public interface DrawNumberView {
      * @param res the result of the last draw
      */
     void result(DrawResult res);
+
+    /**
+     * @param message error messag
+     */
+    void displayError(String message);
 }

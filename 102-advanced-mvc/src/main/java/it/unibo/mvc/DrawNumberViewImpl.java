@@ -26,7 +26,7 @@ public final class DrawNumberViewImpl implements DrawNumberView {
     private final JFrame frame = new JFrame(FRAME_NAME);
 
     /**
-     * 
+     * setta GUI
      */
     public DrawNumberViewImpl() {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -116,5 +116,10 @@ public final class DrawNumberViewImpl implements DrawNumberView {
 
     private void plainMessage(final String msg) {
         JOptionPane.showMessageDialog(frame, msg, "Result", JOptionPane.PLAIN_MESSAGE);
+    }
+
+    @Override
+    public void displayError(String message) {
+        JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 }

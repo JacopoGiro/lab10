@@ -1,6 +1,3 @@
-/**
- * 
- */
 package it.unibo.mvc;
 
 import java.io.File;
@@ -58,4 +55,8 @@ public final class PrintStreamView implements DrawNumberView {
         out.println(res.getDescription());
     }
 
+    @Override
+    public void displayError(String message) {
+        throw new UnsupportedOperationException("Unimplemented method 'displayError'");
+    }
 }

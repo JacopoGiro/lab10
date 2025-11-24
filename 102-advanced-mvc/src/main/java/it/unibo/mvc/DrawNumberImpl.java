@@ -3,7 +3,7 @@ package it.unibo.mvc;
 import java.util.Random;
 
 /**
- *
+ * logica
  */
 public final class DrawNumberImpl implements DrawNumber {
 
@@ -47,5 +47,4 @@ public final class DrawNumberImpl implements DrawNumber {
         }
         return DrawResult.YOU_WON;
     }
-
 }

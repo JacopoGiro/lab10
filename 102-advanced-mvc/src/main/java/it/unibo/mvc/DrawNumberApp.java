@@ -1,24 +1,25 @@
 package it.unibo.mvc;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 /**
+ * controller
  */
 public final class DrawNumberApp implements DrawNumberViewObserver {
-    private static final int MIN = 0;
-    private static final int MAX = 100;
-    private static final int ATTEMPTS = 10;
-
     private final DrawNumber model;
     private final List<DrawNumberView> views;
 
     /**
      * @param views
      *            the views to attach
+     * @throws IOException 
+     * @throws NumberFormatException 
      */
-    public DrawNumberApp(final DrawNumberView... views) {
+    public DrawNumberApp(final DrawNumberView... views) throws NumberFormatException, IOException {
         /*
          * Side-effect proof
          */
@@ -27,7 +28,24 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
             view.setObserver(this);
             view.start();
         }
-        this.model = new DrawNumberImpl(MIN, MAX, ATTEMPTS);
+        Configuration mainConfig = getConfigFromYML();
+        this.model = new DrawNumberImpl(
+            mainConfig.getMin(), 
+            mainConfig.getMax(), 
+            mainConfig.getAttempts()
+        );
+    }
+
+    private Configuration getConfigFromYML() throws NumberFormatException, IOException{
+        BufferedReader bStream = new BufferedReader(
+            new InputStreamReader(
+                getClass().getResourceAsStream("/config.yml"))
+        );
+        return new Configuration.Builder()
+            .setMin(Integer.valueOf(bStream.readLine().split(": ")[1]))
+            .setMax(Integer.valueOf(bStream.readLine().split(": ")[1]))
+            .setAttempts(Integer.valueOf(bStream.readLine().split(": ")[1]))
+            .build();
     }
 
     @Override
@@ -63,10 +81,10 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
     /**
      * @param args
      *            ignored
-     * @throws FileNotFoundException 
+     * @throws IOException 
+     * @throws NumberFormatException 
      */
-    public static void main(final String... args) throws FileNotFoundException {
+    public static void main(final String... args) throws NumberFormatException, IOException {
         new DrawNumberApp(new DrawNumberViewImpl());
     }
-
 }

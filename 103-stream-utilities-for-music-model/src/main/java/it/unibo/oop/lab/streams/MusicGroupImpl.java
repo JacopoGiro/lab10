@@ -33,7 +33,7 @@ public final class MusicGroupImpl implements MusicGroup {
     public Stream<String> orderedSongNames() {
         return songs
             .stream()
-            .map((s -> s.getSongName()))
+            .map(Song::getSongName)
             .sorted();
     }
 
@@ -53,7 +53,7 @@ public final class MusicGroupImpl implements MusicGroup {
     }
 
     @Override
-    public int countSongs(final String albumName) { //prima filtro fuori quelle senza un album poi filetro quelle con l'album corretto
+    public int countSongs(final String albumName) { 
         return Math.toIntExact(
             songs
             .stream()
@@ -77,7 +77,7 @@ public final class MusicGroupImpl implements MusicGroup {
         return songs
             .stream()
             .filter(s -> s.getAlbumName().isPresent() && s.getAlbumName().get().equals(albumName))
-            .mapToDouble(s -> s.getDuration())
+            .mapToDouble(Song::getDuration)
             .average();
     }
 
@@ -86,19 +86,22 @@ public final class MusicGroupImpl implements MusicGroup {
         return songs
             .stream()
             .max((s1, s2) -> Double.compare(s1.getDuration(), s2.getDuration()))
-            .map(s -> s.getSongName());
+            .map(Song::getSongName);
     }
-
-    record AlbumDuration(String name, double duration) {}
 
     @Override
     public Optional<String> longestAlbum() {
         return albums
             .keySet()
             .stream()
-            .map((String album) -> new AlbumDuration(album, songs.stream().filter(song -> song.getAlbumName().isPresent() && song.getAlbumName().get().equals(album)).mapToDouble(song -> song.duration).sum()))
+            .map((String album) -> new AlbumDuration(
+                album, 
+                songs.stream()
+                    .filter(song -> song.getAlbumName().isPresent() 
+                         && song.getAlbumName().get().equals(album))
+                .mapToDouble(song -> song.duration).sum()))
             .max((a1, a2) -> Double.compare(a1.duration, a2.duration))
-            .map(album -> album.name());
+            .map(AlbumDuration::name);
     }
 
     private static final class Song {
@@ -150,6 +153,9 @@ public final class MusicGroupImpl implements MusicGroup {
             return "Song [songName=" + songName + ", albumName=" + albumName + ", duration=" + duration + "]";
         }
 
+    }
+
+    record AlbumDuration(String name, double duration) {
     }
 
 }
